@@ -42,9 +42,6 @@ public class DBUtil {
 	public ResultSet doQuery(String sql, Object[] params) {
 		try {
 			conn = DBUtil.getConnection();
-
-			System.out.println("Conn = " + conn);
-
 			pstmt = conn.prepareStatement(sql);
 			if (params != null) {
 				for (int i = 0; i < params.length; i++) {

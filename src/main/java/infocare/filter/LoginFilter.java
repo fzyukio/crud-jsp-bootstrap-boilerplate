@@ -9,6 +9,9 @@ import java.io.IOException;
 
 @WebFilter("*")
 public class LoginFilter implements Filter {
+	private static final String loginServlet = "/login";
+	private static final String getTipsServlet = "/get-tips";
+
 	public void destroy() {
 	}
 
@@ -18,8 +21,20 @@ public class LoginFilter implements Filter {
 		HttpServletResponse response = (HttpServletResponse) resp;
 
 		String requestedUri = request.getRequestURI();
+		String ctxPath = request.getContextPath();
+		String targetURL = requestedUri.substring(ctxPath.length());
 
-		if(requestedUri.matches(".*(css|jpg|png|gif|js)")){
+		if(targetURL.matches(".*(css|jpg|png|gif|js)")){
+			chain.doFilter(request, response);
+			return;
+		}
+
+		if (getTipsServlet.equalsIgnoreCase(targetURL)) {
+			chain.doFilter(request, response);
+			return;
+		}
+
+		if (loginServlet.equalsIgnoreCase(targetURL)) {
 			chain.doFilter(request, response);
 			return;
 		}
@@ -31,15 +46,6 @@ public class LoginFilter implements Filter {
 			if (o != null) {
 				userIsAuthenticated = (boolean) o;
 			}
-		}
-
-		String ctxPath = request.getContextPath();
-		String targetURL = requestedUri.substring(ctxPath.length());
-		String loginServlet = "/login";
-
-		if (loginServlet.equals(targetURL)) {
-			chain.doFilter(request, response);
-			return;
 		}
 
 		if (!userIsAuthenticated) {

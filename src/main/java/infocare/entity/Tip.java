@@ -2,7 +2,10 @@ package infocare.entity;
 
 import com.alibaba.fastjson.annotation.JSONType;
 
+import javax.json.Json;
+import javax.json.JsonObjectBuilder;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.Objects;
 
 
@@ -12,6 +15,8 @@ public class Tip {
 	private Date start;
 	private Date end;
 	private String content;
+
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/YYYY");
 
 	public Tip() {
 	}
@@ -83,5 +88,13 @@ public class Tip {
 			", end=" + end +
 			", content='" + content + '\'' +
 			'}';
+	}
+
+	public JsonObjectBuilder getJsonObject() {
+		JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+		objectBuilder.add("start", DATE_FORMAT.format(start));
+		objectBuilder.add("end", DATE_FORMAT.format(end));
+		objectBuilder.add("content", content);
+		return objectBuilder;
 	}
 }
